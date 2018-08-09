@@ -30,7 +30,7 @@ RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 
 # java
 RUN mkdir -p /usr/java/default && \
-     curl -Ls 'http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie' | \
+     curl -Ls 'http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie' | \
      tar --strip-components=1 -xz -C /usr/java/default/
 
 # ADD jdk-8u112-linux-x64.tar.gz /usr/java
@@ -40,10 +40,10 @@ ENV JAVA_HOME /usr/java/default
 ENV PATH $PATH:$JAVA_HOME/bin
 
 # download native support
-RUN mkdir -p /tmp/native
-RUN curl -Ls http://dl.bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64-2.7.0.tar | tar -x -C /tmp/native
+#RUN mkdir -p /tmp/native
+#RUN curl -Ls http://dl.bintray.com/sequenceiq/sequenceiq-bin/hadoop-native-64-2.7.0.tar | tar -x -C /tmp/native
 
-ENV HADOOP_VERSION=3.0.0-alpha4-SNAPSHOT
+ENV HADOOP_VERSION=3.1.1
 ADD hadoop-${HADOOP_VERSION}.tar.gz /usr/local/
 WORKDIR /usr/local
 RUN ln -s /usr/local/hadoop-${HADOOP_VERSION} /usr/local/hadoop
@@ -75,8 +75,8 @@ ADD log4j.properties $HADOOP_HOME/etc/hadoop/log4j.properties
 RUN $HADOOP_HOME/bin/hdfs namenode -format
 
 # fixing the libhadoop.so like a boss
-RUN rm -rf /usr/local/hadoop/lib/native
-RUN mv /tmp/native /usr/local/hadoop/lib
+#RUN rm -rf /usr/local/hadoop/lib/native
+#RUN mv /tmp/native /usr/local/hadoop/lib
 
 ADD ssh_config /root/.ssh/config
 RUN chmod 600 /root/.ssh/config
@@ -104,3 +104,13 @@ EXPOSE 19888
 EXPOSE 8030 8031 8032 8033 8040 8042 8088 8188
 #Other ports
 EXPOSE 49707 2122
+
+
+ADD bootstrap.sh /etc/bootstrap.sh
+RUN chown root:root /etc/bootstrap.sh
+RUN chmod 700 /etc/bootstrap.sh
+
+ENV BOOTSTRAP /etc/bootstrap.sh
+
+CMD ["/etc/bootstrap.sh", "-d"]
+
