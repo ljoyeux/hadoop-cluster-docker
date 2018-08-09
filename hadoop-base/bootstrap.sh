@@ -15,17 +15,16 @@ cd $HADOOP_PREFIX/share/hadoop/common ; for cp in ${ACP//,/ }; do  echo == $cp; 
 #sed s/RESOURCEMANAGER/$HOSTNAME/ /usr/local/hadoop/etc/hadoop/yarn-site.xml.template.template > /usr/local/hadoop/etc/hadoop/yarn-site.xml.template
 
 service ssh start
-if [ ! -z ${MASTER} ]; then 
+if [ $NODE == "MASTER" ]; then 
 	nohup $HADOOP_PREFIX/bin/hdfs namenode &
 	nohup $HADOOP_PREFIX/bin/yarn resourcemanager &
 	nohup $HADOOP_PREFIX/bin/yarn timelineserver &
 	nohup $HADOOP_PREFIX/bin/mapred historyserver &
-fi
-
-if [ ! -z ${SLAVE} ]; then
+else
 	nohup $HADOOP_PREFIX/bin/hdfs datanode 2>> /var/log/hadoop/datanode.err >> /var/log/hadoop/datanode.out &
 	nohup $HADOOP_PREFIX/bin/yarn nodemanager 2>> /var/log/hadoop/nodemanager.err >> /var/log/hadoop/nodemanager.out &
 fi
+
 
 if [[ $1 == "-d" ]]; then
     while true; do sleep 1000; done
