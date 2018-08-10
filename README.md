@@ -44,37 +44,45 @@ version: '2'
 
 services:
   master:
-    image: lewuathe/hadoop-master
+    image: lewuathe/hadoop
     ports:
       - "9870:9870"
       - "8088:8088"
       - "19888:19888"
       - "8188:8188"
     container_name: "master"
+    environment:
+      - NODE=MASTER
   slave1:
-    image: lewuathe/hadoop-slave
+    image: lewuathe/hadoop
     container_name: "slave1"
     depends_on:
       - master
     ports:
       - "9901:9864"
       - "8041:8042"
+    environment:
+      - NODE=SLAVE
   slave2:
-    image: lewuathe/hadoop-slave
+    image: lewuathe/hadoop
     container_name: "slave2"
     depends_on:
       - master
     ports:
       - "9902:9864"
       - "8042:8042"
+    environment:
+      - NODE=SLAVE
   slave3:
-    image: lewuathe/hadoop-slave
+    image: lewuathe/hadoop
     container_name: "slave3"
     depends_on:
       - master
     ports:
       - "9903:9864"
       - "8043:8042"
+    environment:
+      - NODE=SLAVE
 
 ```
 
