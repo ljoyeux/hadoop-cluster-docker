@@ -12,7 +12,7 @@
 #
 # Creates multi node hadoop cluster on Docker
 
-FROM sequenceiq/pam:ubuntu-14.04
+FROM ubuntu:18.10
 MAINTAINER lewuathe
 
 USER root
@@ -30,7 +30,7 @@ RUN cp /root/.ssh/id_rsa.pub /root/.ssh/authorized_keys
 
 # java
 RUN mkdir -p /usr/java/default && \
-     curl -Ls 'http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie' | \
+     curl -k -Ls 'https://download.oracle.com/otn-pub/java/jdk/8u192-b12/750e1c8617c5452694857ad95c3ee230/jdk-8u192-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie' | \
      tar --strip-components=1 -xz -C /usr/java/default/
 
 # ADD jdk-8u112-linux-x64.tar.gz /usr/java
